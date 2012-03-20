@@ -2,8 +2,7 @@
   "Handles elements, aka nodes."
   (:use [cthulhu.utils]
         [cthulhu.page]
-        [cthulhu.client]
-        [clojure.reflect :as r])
+        [cthulhu.client])
   (:import [com.gargoylesoftware.htmlunit Page]
            [com.gargoylesoftware.htmlunit.html HtmlElement]))
 
@@ -16,19 +15,18 @@
   "Binds *current-element* with the return value of fetching the page at
 the url with the client for the body context. The option parameter is mapped to diverse ways to obtain an element. For now we have:
 
-:xpath -> get a list of elements by xpath. Executes the body equally
+:all-with-xpath -> get a list of elements by xpath. Executes the body equally
 for every element
 
-:first-xpath -> executes the body only on the first element of the list obtained by the xpath.
+:xpath -> executes the body only on the first element of the list obtained by the xpath.
 
-:by-id -> executes the body for an element fetched by an id.
+:id -> executes the body for an element fetched by an id.
 "
   `(case ~option
-     :xpath (doseq [el ~(.getByXPath page)]
-              (do-with-element el ~@body))
-     ;; :first-xpath ~(do-with-element (.getFirstByXPath page) body)
-     ;; :by-id ~(do-with-element (.getElementById page) body)
-     ))
+     :all-with-xpath (doseq [~'element (.getByXPath ~page ~path)]
+                       (do-with-element ~'element ~@body))
+     :xpath (do-with-element (.getFirstByXPath ~page ~path) ~@body)
+     :id    (do-with-element (.getElementById  ~page ~path) ~@body)))
 
 (defmacro with-element [option path & body]
   "Like the with-element* macro, but uses the *current-element*
@@ -39,9 +37,3 @@ with-page macro."
      ~option
      ~path
      ~@body))
-
-;; (with-client :ff3.6
-;;     (with-page "http://en.wikipedia.org/wiki/Cthulhu"
-;;       ;; (with-element :xpath "Publication_history"
-;;       ;;   (println *current-element*))
-;;       (:members (r/reflect *current-element*))))

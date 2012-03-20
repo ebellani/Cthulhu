@@ -12,15 +12,16 @@
 (deftest with-element-test
   (with-client :ff3.6
     (with-page test-url
-      (with-element :by-id "Publication_history"
-        (println (.asText *current-element*))))))
+      (with-element :id "Publication_history"
+        (println (.getCanonicalXPath *current-element*))))))
 
 ;; (println (macroexpand '(with-client :ff3.6
 ;;                          (with-page test-url
 ;;                            (with-element :by-id "Publication_history"
 ;;                              (println (.asText *current-element*)))))))
 
-(with-client :ff3.6
-  (with-page test-url
-    (with-element :by-id "Publication_history"
-      (println (.asText *current-element*)))))
+;; (with-client :ff3.6
+;;   (with-page test-url
+;;     (with-element :by-id "Publication_history"
+;;       (println (.asText *current-element*)))))
+
