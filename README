@@ -1,0 +1,33 @@
+# clj-htmlunit
+
+In his house at R'lyeh, dead Cthulhu waits dreaming. Also, a clojure
+wrapper for htmlunit
+
+## Usage
+
+The default way I envisage the usage is to use the with-* macros. So you would do something like:
+
+(with-client :ff3.6
+  (with-page "http://en.wikipedia.org/wiki/Cthulhu"
+    (with-element :by-id "Publication_history"
+      (println (.asText *current-element*))
+      (cause-madness *current-element*)
+      ;; other evil things to the element
+      )))
+
+So basically a little DSL for dealing with html pages. You can still
+access the objects normally withouth the with-* macros, or pass them
+to the low level macro variants.
+
+Pay attention that I am not mapping exactly to the htmlunit
+classes. If you want something more specialized, dig directly into
+objects.
+      
+## License
+
+"THE BEER-WARE LICENSE" (Revision 42):
+
+Eduardo Bellani<ebellani@gmail.com> wrote this file. As long as you
+retain this notice you can do whatever you want with this stuff. If we
+meet some day, and you think this stuff is worth it, you can buy me a
+beer in return.
